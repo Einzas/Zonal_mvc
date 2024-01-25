@@ -1,0 +1,69 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@using Zonal_mvc.Models;
+@model Zonal_mvc.Models.LoginViewModel;
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <!-- Aquí puedes agregar el contenido del formulario de inicio de sesión o registro -->
+                <!-- Por ejemplo, puedes tener un formulario de inicio de sesión con campos de usuario y contraseña -->
+                <div class="text-center mb-2    ">
+                    <span class="text-secondary text-muted  fw-bold">Ingresa tus credenciales</span>
+                </div>
+
+                <form asp-controller="user" asp-action="LoginWithCredentials">
+                    <!-- Agrega tus campos de formulario aquí -->
+                    <div class="d-flex flex-column gap-2">
+                        <label asp-for="Email" class="visually-hidden">Usuario</label>
+                        <input asp-for="Email" class="form-control" placeholder="Usuario" />
+
+                        <label asp-for="Password" class="visually-hidden">Contraseña</label>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Contraseña" />
+                        <button type="submit" class="btn btn-primary flex-fill">Login</button>
+                        <hr>
+                        <a class="btn btn-success flex-fill" href="/User/ExternalLogin?provider=Microsoft">Iniciar con Microsoft</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            <span class="nav-link text-dark"> Hola @User.Identity!.Name</span>
+        </li>
+        <li class="nav-item align-items-center absolute top-2">
+            <form method="post" asp-controller="user" asp-action="Logout">
+                <button type="submit" class=" btn btn-outline-danger align-items-center py-0 text-dark">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link enlace text-dark" asp-controller="user" asp-action="Login">Sign In / Sign Up</a>
+        </li>
+    }
+</ul>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha256-hCF7g1L/7f8d3I2kEGU/TcDR7S9TXalJLb7O9EF24eQ="
+        crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function () {
+        // Manejar clic en el enlace para abrir el modal
+        $('.enlace').on('click', function (e) {
+            e.preventDefault(); // Evita la acción predeterminada del enlace
+
+            // Muestra el modal
+            $('#myModal').modal('show');
+        });
+    });
+</script>

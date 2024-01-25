@@ -1,0 +1,187 @@
+﻿@model Zonal_mvc.Models.PrestamosViewModel
+@{
+    ViewData["title"] = "Gestión de Préstamos";
+    Layout = "../Shared/_Layout_logged.cshtml";
+}
+
+<section class="mt-2">
+    &nbsp;
+</section>
+
+<section class="bg-white mt-5 px-5 py-2 rounded-3 shadow-lg">
+    <article class="d-flex justify-content-between mb-2">
+        <span class="h2">Gestión de Préstamos</span>
+
+        <a class="btn btn-primary text-end" href="#" data-bs-toggle="modal" data-bs-target="#crearPrestamoModal">Crear Préstamo</a>
+    </article>
+
+    @if (TempData["message"] != null)
+    {
+        @if (TempData["message"].ToString().Equals("Éxito"))
+        {
+            <!-- Si hay un mensaje de éxito, mostrarlo -->
+            <div class="alert alert-success mb-3" role="alert">
+                El préstamo ha sido creado exitosamente.
+            </div>
+        }
+        else
+        {
+            <!-- Si hay un mensaje de error, mostrarlo -->
+            <div class="alert alert-danger mb-3" role="alert">
+                @TempData["message"]
+            </div>
+        }
+    }
+
+    <!-- Agrega este código al final de tu vista -->
+    <div class="modal fade" id="crearPrestamoModal" tabindex="-1" role="dialog" aria-labelledby="crearPrestamoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="crearPrestamoModalLabel">Crear Préstamo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form asp-controller="GestionPrestamos" asp-action="Create" method="post">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Afiliado</label>
+                            <select class="form-select" asp-for="NuevoPrestamo.AfiliadoID" required>
+                                <option value="">Selecciona un afiliado</option>
+                                <!-- Itera sobre los afiliados y crea una opción por cada uno -->
+                                @if (Model.Afiliados != null)
+                                {
+                                    foreach (var afiliado in Model.Afiliados)
+                                    {
+                                        <option value="@afiliado.Id">@afiliado.Nombre @afiliado.Apellido</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="monto" class="form-label">Monto</label>
+                            <input type="number" class="form-control" asp-for="NuevoPrestamo.Monto" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tasaintereres" class="form-label">Tasa de interes</label>
+                            <input type="number" class="form-control" asp-for="NuevoPrestamo.TasaInteres" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="plazo" class="form-label">Plazo</label>
+                            <input type="number" class="form-control" asp-for="NuevoPrestamo.Plazo" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
+                            <input type="date" class="form-control" asp-for="NuevoPrestamo.FechaInicio" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="fechaFin" class="form-label">Fecha de Fin</label>
+                            <input type="date" class="form-control" asp-for="NuevoPrestamo.FechaFin" required>
+                        </div>
+
+                        <div class="d-flex flex-column">
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+
+
+                    </form>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @if (Model.Prestamos != null && Model.Prestamos.Count > 0)
+    {
+        <!-- Si hay préstamos, mostrar la tabla con los datos -->
+        <table class="table">
+            <thead>
+                <!-- Encabezados de la tabla, ajusta según tus campos -->
+                <tr>
+                    <th>ID del Préstamo</th>
+                    <th>Afiliado</th>
+                    <th>Monto</th>
+                    <th>Tasa de Interés</th>
+                    <th>Plazo</th>
+                    <th>Fecha de Inicio</th>
+                    <th>Fecha de Fin</th>
+                    <th>Ver Tabla</th>
+                    <th>PDF del Préstamo</th>
+                    <!-- Agrega más columnas según sea necesario -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Itera sobre los préstamos y muestra cada fila -->
+                @foreach (var prestamo in Model.Prestamos)
+                {
+                    <tr>
+                        <td>@prestamo.PrestamoID</td>
+                        <td>@($"{prestamo.Afiliado.Nombre} {prestamo.Afiliado.Apellido}")</td>
+                        <td>@prestamo.Monto</td>
+                        <td>@prestamo.TasaInteres</td>
+                        <td>@prestamo.Plazo</td>
+                        <td>@prestamo.FechaInicio</td>
+                        <td>@prestamo.FechaFin</td>
+                        <td>
+                            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#amortizacionesModal" data-prestamoid="@prestamo.PrestamoID">
+                                Ver Tabla
+                            </button>
+                        </td>
+
+                        <!-- Agrega más celdas según sea necesario -->
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <!-- Si no hay préstamos, mostrar una alerta -->
+        <div class="alert alert-warning" role="alert">
+            No hay préstamos disponibles.
+        </div>
+    }
+</section>
+<!-- Modal único para todas las amortizaciones -->
+<div class="modal fade" id="amortizacionesModal" tabindex="-1" role="dialog" aria-labelledby="amortizacionesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="amortizacionesModalLabel">Tabla de Amortizaciones</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Contenedor para el cuerpo de la tabla de amortizaciones -->
+                <div id="amortizacionesModalBody"></div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script>
+        // Manejar el evento de clic en el botón "Ver Tabla"
+        $(document).ready(function () {
+            $('#amortizacionesModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Botón que activó el modal
+                var prestamoId = button.data('prestamoid'); // Obtener el ID del préstamo
+
+                // Realizar una solicitud AJAX para obtener los datos de amortización
+                $.ajax({
+                    url: '/GestionPrestamos/GetAmortizaciones', // Ajusta la URL según tu controlador
+                    data: { prestamoId: prestamoId },
+                    type: 'GET',
+                    success: function (result) {
+                        // Actualizar el contenido del cuerpo de la tabla de amortizaciones
+                        $('#amortizacionesModalBody').html(result);
+                    },
+                    error: function () {
+                        alert('Error al obtener los datos de amortización.');
+                    }
+                });
+            });
+        });
+    </script>
+}

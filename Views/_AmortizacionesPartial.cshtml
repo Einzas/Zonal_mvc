@@ -1,0 +1,34 @@
+﻿@model List<Zonal_mvc.Models.AmortizacionesModel>
+
+<table class="table">
+    <thead>
+        
+<!-- Agrega más columnas según sea necesario -->
+        <tr>
+            <th scope="col">Número de cuota</th>
+            <th scope="col">Fecha de pago</th>
+            <th scope="col">Cuota</th>
+            <th scope="col">Capital de inicio</th>
+            <th scope="col">Interes</th>
+            <th scope="col">Capital</th>
+            <th scope="col">Saldo</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Itera sobre las amortizaciones y muestra cada fila -->
+        @foreach (var amortizacion in Model)
+        {
+            <tr>
+                <td>@amortizacion.NumeroCuota</td>
+                <td>@amortizacion.FechaPago</td>
+                <td>@amortizacion.MontoCuota</td>
+                <td>@amortizacion.MontoCapital</td>
+                <td>@amortizacion.MontoInteres</td>
+                <td>@amortizacion.MontoTotal</td>
+                <td>@(amortizacion.MontoCapital - amortizacion.MontoTotal )</td>
+                <!-- Agrega más celdas según sea necesario -->
+            </tr>
+        }
+    </tbody>
+</table>

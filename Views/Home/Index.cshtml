@@ -1,0 +1,16 @@
+﻿
+@{
+    // Verificar si el usuario está autenticado
+    bool isAuthenticated = User.Identity.IsAuthenticated;
+
+    // Elegir el layout en función de si el usuario está autenticado o no
+    string layout = isAuthenticated ? "../Shared/_Layout_logged.cshtml":"../Shared/_Layout.cshtml" ;
+}
+
+@{
+    Layout = layout;
+    ViewData["title"] = "Inicio";
+}
+
+<!-- Resto del contenido de tu vista -->
+

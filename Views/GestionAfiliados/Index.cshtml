@@ -1,0 +1,137 @@
+﻿@model Zonal_mvc.Models.AfiliadosViewModel
+@{
+    ViewData["title"] = "Afiliados";
+    Layout = "../Shared/_Layout_logged.cshtml";
+}
+
+<section class="mt-5">
+
+    <section class="bg-white mt-5  px-5 py-2 rounded-3 shadow-lg">
+        <article class="d-flex justify-content-between mb-2">
+            <span class="h2">Afiliados</span>
+
+            <a class="btn btn-primary text-end" href="#" data-bs-toggle="modal" data-bs-target="#crearAfiliadoModal">Crear</a>
+
+        </article>
+        @if (TempData["message"] != null)
+        {
+            @if (TempData["message"].ToString().Equals("Éxito"))
+            {
+                <!-- Si hay un mensaje de éxito, mostrarlo -->
+                <div class="alert alert-success mb-3" role="alert">
+                    La afiliación ha sido exitosa.
+                </div>
+            }
+            else
+            {
+                <!-- Si hay un mensaje de error, mostrarlo -->
+                <div class="alert alert-danger mb-3" role="alert">
+                    @TempData["message"]
+                </div>
+            }
+        }
+
+
+        <!-- Si hay un mensaje de error, mostrarlo -->
+
+
+
+        <div class="modal fade" id="crearAfiliadoModal" tabindex="-1" role="dialog" aria-labelledby="crearAfiliadoModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="crearAfiliadoModalLabel">Crear Afiliado</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Aquí puedes agregar el formulario para crear un afiliado -->
+                        <form asp-controller="GestionAfiliados" asp-action="Create" method="post">
+                            <!-- Agrega tus campos de formulario aquí -->
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" asp-for="NuevoAfiliado.Nombre" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="apellido" class="form-label">Apellido</label>
+                                <input type="text" class="form-control" id="apellido" asp-for="NuevoAfiliado.Apellido" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cedula" class="form-label">Cédula</label>
+                                <input type="text" class="form-control" id="cedula" asp-for="NuevoAfiliado.Cedula" min="10" maxlength="10" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="direccion" class="form-label">Dirección</label>
+                                <input type="text" class="form-control" id="direccion" asp-for="NuevoAfiliado.Direccion" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="ciudad" class="form-label">Ciudad</label>
+                                <input type="text" class="form-control" id="ciudad" asp-for="NuevoAfiliado.Ciudad" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="telefono" class="form-label">Teléfono</label>
+                                <input type="text" class="form-control" id="telefono" asp-for="NuevoAfiliado.Telefono" maxlength="13" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="genero" class="form-label">Género</label>
+                                <select class="form-select" id="genero" asp-for="NuevoAfiliado.Genero" required>
+                                    <option value="">Selecciona una opción</option>
+                                    <option value="Masculino">Masculino</option>
+                                    <option value="Femenino">Femenino</option>
+                                </select>
+
+
+                            </div>
+                            <div class="d-flex flex-column">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Afiliados != null && Model.Afiliados.Count > 0)
+        {
+            <!-- Si hay registros, mostrar la tabla con los datos -->
+            <table class="table">
+                <thead>
+                    <!-- Encabezados de la tabla, ajusta según tus campos -->
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Cédula</th>
+                        <th>Dirección</th>
+                        <th>Ciudad</th>
+                        <th>Teléfono</th>
+                        <th>Género</th>
+
+                        <!-- Agrega más columnas según sea necesario -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Itera sobre los afiliados y muestra cada fila -->
+                    @foreach (var afiliado in Model.Afiliados)
+                    {
+                        <tr>
+                            <td>@afiliado.Nombre</td>
+                            <td>@afiliado.Apellido</td>
+                            <td>@afiliado.Cedula</td>
+                            <td>@afiliado.Direccion</td>
+                            <td>@afiliado.Ciudad</td>
+                            <td>@afiliado.Telefono</td>
+                            <td>@afiliado.Genero</td>
+                            <!-- Agrega más celdas según sea necesario -->
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <!-- Si no hay registros, mostrar una alerta -->
+            <div class="alert alert-warning" role="alert">
+                No hay datos disponibles.
+            </div>
+        }
+    </section>
+</section>
